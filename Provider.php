@@ -14,4 +14,20 @@ class Provider extends LinkedInProvider implements ProviderInterface
      * Unique Provider Identifier.
      */
     public const IDENTIFIER = 'LINKEDIN';
+    
+    /**
+     * Redirect the user of the application to the provider's authentication screen.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function redirect()
+    {
+        $state = Str::random(40);
+
+        if (!$this->isStateless()) {
+            $this->request->session()->put('state', $state);
+        }
+
+        return new RedirectResponse($this->getAuthUrl($state));
+    }
 }
